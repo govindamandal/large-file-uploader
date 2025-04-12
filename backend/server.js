@@ -11,7 +11,7 @@ const app = express();
 app.use(cors({
   origin: '*',
   methods: ['POST', 'GET'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'chunkindex', 'filename', 'totalchunks'],
 }));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
@@ -21,16 +21,16 @@ fs.ensureDirSync(uploadDir);
 
 // Endpoint to receive chunk
 app.post('/upload-chunk', async (req, res) => {
-  const { filename, chunkIndex, totalChunks } = req.headers;
+  const { filename, chunkindex, totalChunks } = req.headers;
 
   const chunkData = [];
 
   req.on('data', chunk => chunkData.push(chunk));
   req.on('end', async () => {
     const buffer = Buffer.concat(chunkData);
-    const chunkPath = path.join(uploadDir, `${filename}.part${chunkIndex}`);
+    const chunkPath = path.join(uploadDir, `${filename}.part${chunkindex}`);
     await fs.writeFile(chunkPath, buffer);
-    console.log(`Received chunk ${chunkIndex} of ${filename}`);
+    console.log(`Received chunk ${chunkindex} of ${filename}`);
     res.status(200).send('Chunk received');
   });
 });

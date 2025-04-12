@@ -2,7 +2,7 @@ import React, { useState, useRef } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-const CHUNK_SIZE = 400 * 1024 * 1024; // 5MB
+const CHUNK_SIZE = 5 * 1024 * 1024; // 5MB
 
 export default function ChunkedUploader() {
   const [file, setFile] = useState(null);
